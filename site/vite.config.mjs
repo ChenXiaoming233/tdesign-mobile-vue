@@ -9,6 +9,7 @@ import tdocPlugin from './web/plugins/plugin-tdoc';
 const resolvePath = (r) => path.resolve(__dirname, r);
 
 const publicPathMap = {
+  playground: './',
   preview: '/',
   production: 'https://static.tdesign.tencent.com/mobile-vue/',
 };
@@ -30,6 +31,11 @@ const disableTreeShakingPlugin = (paths) => ({
 export default ({ mode }) => {
   return defineConfig({
     base: publicPathMap[mode],
+    define: {
+      'process.env.TDESIGN_TAB_BAR_GLASS_PLAYGROUND': JSON.stringify(
+        process.env.TDESIGN_TAB_BAR_GLASS_PLAYGROUND || 'false',
+      ),
+    },
     root: '.',
     resolve: {
       alias: {

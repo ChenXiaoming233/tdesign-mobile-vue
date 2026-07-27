@@ -43,9 +43,10 @@ export default defineComponent({
       `${tabBarClass.value}--${props.shape}`,
     ]);
 
-    // 调参注入仅服务本地 Demo 与测试；生产构建固定使用已冻结的内部默认值。
-    const glassDevContext =
-      process.env.NODE_ENV === 'production' ? undefined : inject(tabBarGlassDevContextKey, undefined);
+    // 调参注入仅服务本地 Demo、测试与 fork-only Playground；正式生产构建固定使用已冻结的内部默认值。
+    const glassDevContextEnabled =
+      process.env.NODE_ENV !== 'production' || process.env.TDESIGN_TAB_BAR_GLASS_PLAYGROUND === 'true';
+    const glassDevContext = glassDevContextEnabled ? inject(tabBarGlassDevContextKey, undefined) : undefined;
     const glassFilterState = useTabBarGlassFilter({
       root,
       enabled: computed(() => props.effect === 'glass'),

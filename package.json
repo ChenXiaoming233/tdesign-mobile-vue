@@ -31,6 +31,8 @@
     "site": "cd site && vite build",
     "site:preview": "cd site && vite build --mode preview",
     "postsite:preview": "cp _site/index.html _site/404.html",
+    "site:playground": "cd site && cross-env TDESIGN_TAB_BAR_GLASS_PLAYGROUND=true vite build --mode playground",
+    "postsite:playground": "cp _site/index.html _site/404.html",
     "test": "npm run test:unit && npm run test:snap",
     "test:unit": "vitest run",
     "test:update": "vitest run -u && npm run test:snap-update",
