@@ -2,9 +2,19 @@
   <div class="glass-tab-bar-demo">
     <div class="glass-tab-bar-demo__orb glass-tab-bar-demo__orb--left" />
     <div class="glass-tab-bar-demo__orb glass-tab-bar-demo__orb--right" />
-    <t-tab-bar v-model="value" effect="glass" shape="round" theme="tag" :fixed="false" :split="false">
+    <t-tab-bar
+      v-for="tabTheme in tabThemes"
+      :key="tabTheme"
+      v-model="value"
+      class="glass-tab-bar-demo__bar"
+      effect="glass"
+      shape="round"
+      :theme="tabTheme"
+      :fixed="false"
+      :split="false"
+    >
       <t-tab-bar-item v-for="item in list" :key="item.value" :value="item.value">
-        {{ item.label }}
+        <template v-if="tabTheme === 'capsule'">{{ item.label }}</template>
         <template #icon>
           <t-icon :name="item.icon" />
         </template>
@@ -18,6 +28,7 @@ import { ref } from 'vue';
 import { Icon as TIcon } from 'tdesign-icons-vue-next';
 
 const value = ref('home');
+const tabThemes = ['tag', 'capsule'] as const;
 const list = [
   { value: 'home', label: '首页', icon: 'home' },
   { value: 'discover', label: '发现', icon: 'search' },
@@ -35,6 +46,10 @@ const list = [
   background:
     linear-gradient(135deg, rgb(222 237 255 / 92%), rgb(255 255 255 / 64%)),
     repeating-linear-gradient(90deg, transparent 0 31px, rgb(0 82 217 / 12%) 32px);
+
+  &__bar + &__bar {
+    margin-top: 12px;
+  }
 
   &__orb {
     position: absolute;

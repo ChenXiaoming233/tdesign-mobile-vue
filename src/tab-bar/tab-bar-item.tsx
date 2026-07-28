@@ -21,7 +21,6 @@ export default defineComponent({
       split,
       shape,
       theme,
-      effect,
       defaultIndex,
       activeValue,
       itemCount,
@@ -91,7 +90,7 @@ export default defineComponent({
 
     const isToggleCurrent = computed(() => Array.isArray(activeValue.value) && activeValue.value[0] === currentName);
 
-    const isPressable = computed(() => effect.value === 'glass' && shape.value === 'round');
+    const isPressable = computed(() => theme.value === 'capsule' && shape.value === 'round');
     const isPressed = computed(() => isPressable.value && pressedValue.value === currentName);
     const isPreviewingPress = computed(() => isPressable.value && typeof pressedValue.value !== 'undefined');
     const isVisuallyChecked = computed(() =>

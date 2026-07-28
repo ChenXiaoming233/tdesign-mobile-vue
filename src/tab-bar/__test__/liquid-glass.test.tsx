@@ -3,6 +3,7 @@ import { mount } from '@vue/test-utils';
 import { renderToString } from 'vue/server-renderer';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import TabBar from '../tab-bar';
+import TabBarItem from '../tab-bar-item';
 import { tabBarGlassDevContextKey } from '../useTabBarGlassFilter';
 
 interface RuntimeOptions {
@@ -118,6 +119,38 @@ describe('TabBar Liquid Glass runtime', () => {
 
     expect(wrapper.classes()).not.toContain('t-tab-bar--glass');
     expect(wrapper.find('[class*="__glass-"]').exists()).toBe(false);
+  });
+
+  it('keeps the original round tag selection without a shared indicator in glass mode', () => {
+    const wrapper = mount(TabBar, {
+      props: { effect: 'glass', fixed: false, shape: 'round', theme: 'tag', value: 'home' },
+      slots: {
+        default: () => [
+          h(TabBarItem, { value: 'home' }, () => 'Home'),
+          h(TabBarItem, { value: 'profile' }, () => 'Profile'),
+        ],
+      },
+    });
+
+    expect(wrapper.classes()).not.toContain('t-tab-bar--theme-capsule');
+    expect(wrapper.find('.t-tab-bar__selection-indicator').exists()).toBe(false);
+    expect(wrapper.find('.t-tab-bar-item__content--tag.t-tab-bar-item__content--checked').exists()).toBe(true);
+  });
+
+  it.each(['normal', 'glass'] as const)('renders the shared capsule indicator with the %s material', (effect) => {
+    const wrapper = mount(TabBar, {
+      props: { effect, fixed: false, shape: 'round', theme: 'capsule', value: 'home' },
+      slots: {
+        default: () => [
+          h(TabBarItem, { value: 'home' }, () => 'Home'),
+          h(TabBarItem, { value: 'profile' }, () => 'Profile'),
+        ],
+      },
+    });
+
+    expect(wrapper.classes()).toContain('t-tab-bar--theme-capsule');
+    expect(wrapper.find('.t-tab-bar__selection-indicator').exists()).toBe(true);
+    expect(wrapper.find('.t-tab-bar-item__content--capsule.t-tab-bar-item__content--checked').exists()).toBe(true);
   });
 
   it('mounts glass layers and creates an SVG filter after enhancement succeeds', async () => {
