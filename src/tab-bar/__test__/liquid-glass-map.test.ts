@@ -13,10 +13,32 @@ const getPixel = (data: Uint8ClampedArray, width: number, x: number, y: number) 
 };
 
 const createFixture = () => {
-  const textures = createTabBarGlassTextures({ width: 100, height: 40, radius: 20, dpr: 1 });
+  const textures = createTabBarGlassTextures({
+    width: 100,
+    height: 40,
+    radius: 20,
+    dpr: 1,
+    tuning: { surface: 'squircle', thicknessRatio: 1, bezelRatio: 0.9, blur: 0.6 },
+  });
   if (!textures) throw new Error('Expected texture fixture');
   return textures;
 };
+
+describe('DEFAULT_TAB_BAR_GLASS_TUNING', () => {
+  it('matches the approved optical calibration', () => {
+    expect(DEFAULT_TAB_BAR_GLASS_TUNING).toEqual({
+      surface: 'lip',
+      thicknessRatio: 0,
+      bezelRatio: 1,
+      refractiveIndex: 2,
+      displacementGain: 1.5,
+      blur: 0.7,
+      specularOpacity: 0.75,
+      specularSaturation: 2,
+      lightAngle: 270,
+    });
+  });
+});
 
 describe('createRefractionProfile', () => {
   it('is deterministic and neutral at an index of refraction of one', () => {
@@ -40,7 +62,7 @@ describe('createTabBarGlassTextures', () => {
   it('keeps explicit defaults byte-identical to implicit defaults', () => {
     expect(
       createTabBarGlassTextures({ width: 100, height: 40, radius: 20, dpr: 1, tuning: DEFAULT_TAB_BAR_GLASS_TUNING }),
-    ).toEqual(createFixture());
+    ).toEqual(createTabBarGlassTextures({ width: 100, height: 40, radius: 20, dpr: 1 }));
   });
 
   it('keeps the center neutral and limits displacement to the bezel', () => {
@@ -68,7 +90,7 @@ describe('createTabBarGlassTextures', () => {
       height: 40,
       radius: 20,
       dpr: 1,
-      tuning: { bezelRatio: 1 },
+      tuning: { surface: 'squircle', thicknessRatio: 1, bezelRatio: 1 },
     });
     if (!textures) throw new Error('Expected full-width bezel fixture');
 

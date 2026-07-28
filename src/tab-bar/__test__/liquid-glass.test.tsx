@@ -4,6 +4,7 @@ import { renderToString } from 'vue/server-renderer';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import TabBar from '../tab-bar';
 import TabBarItem from '../tab-bar-item';
+import LiquidGlassDemo from '../demos/liquid-glass.vue';
 import { tabBarGlassDevContextKey } from '../useTabBarGlassFilter';
 
 interface RuntimeOptions {
@@ -112,6 +113,16 @@ afterEach(() => {
   vi.unstubAllEnvs();
   document.body.innerHTML = '';
 });
+
+const mountLiquidGlassDemo = () =>
+  mount(LiquidGlassDemo, {
+    global: {
+      components: {
+        TTabBar: TabBar,
+        TTabBarItem: TabBarItem,
+      },
+    },
+  });
 
 describe('TabBar Liquid Glass runtime', () => {
   it('keeps the default mode free of glass runtime DOM', () => {
@@ -421,8 +432,20 @@ describe('TabBar Liquid Glass runtime', () => {
 });
 
 describe('TabBar Liquid Glass demo', () => {
+  it('uses upstream sizing for classic tag and the compact unsplit shared capsule defaults', () => {
+    const wrapper = mountLiquidGlassDemo();
+    const tagGroup = wrapper.get('[data-testid="comparison-group-tag"]');
+    const capsuleGroup = wrapper.get('[data-testid="comparison-group-capsule"]');
+
+    expect(tagGroup.text()).toContain('split=false');
+    expect(capsuleGroup.text()).toContain('split=false');
+    expect(wrapper.attributes('style')).toContain('--demo-tab-bar-height: 56px');
+    expect(wrapper.attributes('style')).toContain('--td-tab-bar-glass-bg-color: rgba(255, 255, 255, 0.6)');
+    expect(capsuleGroup.findAll('.t-tab-bar-item--split')).toHaveLength(0);
+  });
+
   it('updates fallback blur without enabling SVG enhancement', async () => {
-    const wrapper = mount(LiquidGlassDemo);
+    const wrapper = mountLiquidGlassDemo();
     const fallbackBlur = wrapper.get('[data-testid="parameter-fallback-blur"]');
 
     expect(fallbackBlur.attributes('max')).toBe('12');
@@ -435,7 +458,7 @@ describe('TabBar Liquid Glass demo', () => {
   });
 
   it('keeps the same free transform controls across every validation background', async () => {
-    const wrapper = mount(LiquidGlassDemo);
+    const wrapper = mountLiquidGlassDemo();
     await wrapper.get('[data-testid="parameter-background-scale"]').setValue('1.4');
     await wrapper.get('[data-testid="parameter-background-offset-x"]').setValue('36');
     await wrapper.get('[data-testid="parameter-background-offset-y"]').setValue('-24');
@@ -444,7 +467,7 @@ describe('TabBar Liquid Glass demo', () => {
       await wrapper.get(`[data-testid="background-${background}"]`).trigger('click');
       const backdrops = wrapper.findAll('.glass-demo__backdrop');
 
-      expect(backdrops).toHaveLength(3);
+      expect(backdrops).toHaveLength(6);
       backdrops.forEach((backdrop) => {
         expect(backdrop.classes()).toContain(`glass-demo__backdrop--${background}`);
         expect(backdrop.attributes('style')).toContain('--demo-background-scale: 1.4');

@@ -404,8 +404,8 @@ const surfaces: Array<{ value: TabBarGlassSurface; label: string; name: string }
 ];
 const imageUrl = 'https://tdesign.gtimg.com/demo/demo-image-1.png';
 
-const inspectionMode = ref<InspectionMode>('specular-overlay');
-const background = ref<Background>('grid');
+const inspectionMode = ref<InspectionMode>('refraction');
+const background = ref<Background>('text');
 const theme = ref<Theme>('light');
 const surface = ref<TabBarGlassSurface>(DEFAULT_TAB_BAR_GLASS_TUNING.surface);
 const previewWidth = ref(390);
@@ -421,7 +421,7 @@ const specularSaturation = ref(DEFAULT_TAB_BAR_GLASS_TUNING.specularSaturation);
 const bezelRatio = ref(DEFAULT_TAB_BAR_GLASS_TUNING.bezelRatio);
 const displacementGain = ref(DEFAULT_TAB_BAR_GLASS_TUNING.displacementGain);
 const blur = ref(DEFAULT_TAB_BAR_GLASS_TUNING.blur);
-const baselineOpacity = ref(0.5);
+const baselineOpacity = ref(0.6);
 const fallbackBlur = ref(8);
 
 const materialHeight = 64;
@@ -475,6 +475,8 @@ const refractionStyle = computed<CSSProperties>(() => ({
 }));
 const demoVariables = computed<CSSProperties>(() => ({
   '--inspector-preview-width': `${previewWidth.value}px`,
+  '--td-tab-bar-color': '#1f2329',
+  '--td-tab-bar-active-color': '#0052d9',
   '--td-tab-bar-glass-bg-color': `rgba(255, 255, 255, ${baselineOpacity.value})`,
   '--td-tab-bar-glass-fallback-blur': `${fallbackBlur.value}px`,
 }));
@@ -597,7 +599,7 @@ const resetParameters = () => {
   bezelRatio.value = DEFAULT_TAB_BAR_GLASS_TUNING.bezelRatio;
   displacementGain.value = DEFAULT_TAB_BAR_GLASS_TUNING.displacementGain;
   blur.value = DEFAULT_TAB_BAR_GLASS_TUNING.blur;
-  baselineOpacity.value = 0.5;
+  baselineOpacity.value = 0.6;
   fallbackBlur.value = 8;
   previewWidth.value = 390;
 };
@@ -691,7 +693,7 @@ const materialParameters = [
     label: 'Baseline opacity / 基础材质透明度',
     description: '只影响 Final Glass；检查模式不会加入基础填充。',
     value: baselineOpacity,
-    default: 0.5,
+    default: 0.6,
     min: 0.2,
     max: 0.9,
     step: 0.01,

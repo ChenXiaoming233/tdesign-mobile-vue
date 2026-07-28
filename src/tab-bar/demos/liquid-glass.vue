@@ -3,70 +3,97 @@
     <div ref="layoutElement" class="glass-demo__layout" :class="{ 'is-stacked': stacked }">
       <aside class="glass-demo__stage">
         <div class="glass-demo__comparison" data-testid="comparison">
-          <article v-for="mode in comparisonModes" :key="mode" class="glass-demo__preview">
-            <div class="glass-demo__preview-title">
-              <strong>{{ comparisonLabels[mode] }}</strong>
-              <span>{{ previewWidth }} px</span>
-            </div>
-            <div
-              class="glass-demo__device"
-              :class="{ 'is-moving': backgroundMoves, 'is-dragging': backgroundDragging }"
-              :style="{ width: `${previewWidth}px`, '--demo-image': `url(${landscapeUrl})` }"
-              :data-testid="`preview-${mode}`"
-              @pointerdown="startBackgroundDrag"
-              @pointermove="moveBackground"
-              @pointerup="stopBackgroundDrag"
-              @pointercancel="stopBackgroundDrag"
-            >
-              <div
-                class="glass-demo__backdrop"
-                :class="`glass-demo__backdrop--${background}`"
-                :style="backgroundPlaneStyle"
-                aria-hidden="true"
-              >
-                <div v-if="background === 'text'" class="glass-demo__backdrop-copy">
-                  <strong>Design systems should preserve context across every layer of an interface.</strong>
-                  <span v-for="line in textBackdropLines" :key="line">{{ line }}</span>
-                </div>
-                <div v-else class="glass-demo__landmarks">
-                  <span v-for="index in 10" :key="index">{{ index }}</span>
-                </div>
+          <section
+            v-for="group in comparisonGroups"
+            :key="group.id"
+            class="glass-demo__comparison-group"
+            :data-testid="`comparison-group-${group.id}`"
+          >
+            <header class="glass-demo__group-header">
+              <div>
+                <strong>{{ group.label }}</strong>
+                <span>{{ group.description }}</span>
               </div>
+              <p>
+                <code>shape="{{ shape }}"</code>
+                <code>theme="{{ group.tabTheme }}"</code>
+                <code>split={{ group.split }}</code>
+                <code>fixed={{ fixed }}</code>
+                <code>effect="normal | glass"</code>
+              </p>
+            </header>
 
-              <div class="glass-demo__bar-frame">
-                <t-tab-bar
-                  v-model="selected"
-                  :class="{ 'glass-demo__fallback-bar': mode === 'fallback' }"
-                  :effect="mode === 'normal' ? 'normal' : mode === 'fallback' ? 'glass' : effect"
-                  :shape="shape"
-                  :fixed="fixed"
-                  :placeholder="placeholder"
-                  :safe-area-inset-bottom="safeArea"
-                  :bordered="bordered"
+            <div class="glass-demo__group-previews">
+              <article v-for="mode in group.modes" :key="mode.id" class="glass-demo__preview">
+                <div class="glass-demo__preview-title">
+                  <strong>{{ mode.label }}</strong>
+                  <span>{{ previewWidth }} px</span>
+                </div>
+                <div
+                  class="glass-demo__device"
+                  :class="{ 'is-moving': backgroundMoves, 'is-dragging': backgroundDragging }"
+                  :style="{ width: `${previewWidth}px`, '--demo-image': `url(${landscapeUrl})` }"
+                  :data-testid="`preview-${mode.id}`"
+                  @pointerdown="startBackgroundDrag"
+                  @pointermove="moveBackground"
+                  @pointerup="stopBackgroundDrag"
+                  @pointercancel="stopBackgroundDrag"
                 >
-                  <t-tab-bar-item v-for="item in items" :key="item.value" :value="item.value">
-                    {{ item.label }}
-                    <template #icon><t-icon :name="item.icon" /></template>
-                  </t-tab-bar-item>
-                </t-tab-bar>
-                <t-tab-bar
-                  v-if="multiple && mode === 'glass'"
-                  v-model="secondarySelected"
-                  class="glass-demo__secondary-bar"
-                  effect="glass"
-                  :shape="shape"
-                  :fixed="false"
-                  :safe-area-inset-bottom="false"
-                  :bordered="bordered"
-                >
-                  <t-tab-bar-item v-for="item in secondaryItems" :key="item.value" :value="item.value">
-                    {{ item.label }}
-                    <template #icon><t-icon :name="item.icon" /></template>
-                  </t-tab-bar-item>
-                </t-tab-bar>
-              </div>
+                  <div
+                    class="glass-demo__backdrop"
+                    :class="`glass-demo__backdrop--${background}`"
+                    :style="backgroundPlaneStyle"
+                    aria-hidden="true"
+                  >
+                    <div v-if="background === 'text'" class="glass-demo__backdrop-copy">
+                      <strong>Design systems should preserve context across every layer of an interface.</strong>
+                      <span v-for="line in textBackdropLines" :key="line">{{ line }}</span>
+                    </div>
+                    <div v-else class="glass-demo__landmarks">
+                      <span v-for="index in 10" :key="index">{{ index }}</span>
+                    </div>
+                  </div>
+
+                  <div class="glass-demo__bar-frame">
+                    <t-tab-bar
+                      v-model="selected"
+                      :class="{ 'glass-demo__fallback-bar': mode.fallback }"
+                      :effect="mode.effect"
+                      :shape="shape"
+                      :theme="group.tabTheme"
+                      :fixed="fixed"
+                      :placeholder="placeholder"
+                      :safe-area-inset-bottom="safeArea"
+                      :bordered="bordered"
+                      :split="group.split"
+                    >
+                      <t-tab-bar-item v-for="item in items" :key="item.value" :value="item.value">
+                        <template v-if="group.tabTheme === 'capsule'">{{ item.label }}</template>
+                        <template #icon><t-icon :name="item.icon" /></template>
+                      </t-tab-bar-item>
+                    </t-tab-bar>
+                    <t-tab-bar
+                      v-if="multiple && mode.id === 'capsule-glass'"
+                      v-model="secondarySelected"
+                      class="glass-demo__secondary-bar"
+                      effect="glass"
+                      :shape="shape"
+                      theme="capsule"
+                      :fixed="false"
+                      :safe-area-inset-bottom="false"
+                      :bordered="bordered"
+                      :split="false"
+                    >
+                      <t-tab-bar-item v-for="item in secondaryItems" :key="item.value" :value="item.value">
+                        {{ item.label }}
+                        <template #icon><t-icon :name="item.icon" /></template>
+                      </t-tab-bar-item>
+                    </t-tab-bar>
+                  </div>
+                </div>
+              </article>
             </div>
-          </article>
+          </section>
         </div>
 
         <p class="glass-demo__stage-hint" data-testid="stage-hint">
@@ -81,25 +108,6 @@
       <div class="glass-demo__panel">
         <header class="glass-demo__toolbar">
           <div class="glass-demo__modes">
-            <div class="glass-demo__control-group">
-              <span class="glass-demo__control-copy">
-                <strong>Effect / 材质效果</strong>
-                <small>切换普通模式与 Liquid Glass 增强模式，影响整个 TabBar 材质渲染路径。</small>
-              </span>
-              <div class="glass-demo__segments" role="group" aria-label="Effect">
-                <button
-                  v-for="option in effects"
-                  :key="option"
-                  type="button"
-                  :class="{ 'is-active': effect === option }"
-                  :aria-pressed="effect === option"
-                  :data-testid="`effect-${option}`"
-                  @click="effect = option"
-                >
-                  {{ option }}
-                </button>
-              </div>
-            </div>
             <div class="glass-demo__control-group">
               <span class="glass-demo__control-copy">
                 <strong>Shape / 外形</strong>
@@ -415,27 +423,62 @@ import { TabBarGlassBuildStats, TabBarGlassRuntimeTuning, tabBarGlassDevContextK
 
 type Effect = 'normal' | 'glass';
 type Shape = 'normal' | 'round';
+type TabBarTheme = 'tag' | 'capsule';
 type Background = 'grid' | 'text' | 'image';
 type Theme = 'light' | 'dark';
 
-const effects: Effect[] = ['normal', 'glass'];
 const shapes: Shape[] = ['normal', 'round'];
 const backgrounds: Background[] = ['grid', 'text', 'image'];
 const themes: Theme[] = ['light', 'dark'];
 const widths = [320, 390, 430, 620];
-const comparisonModes = ['normal', 'fallback', 'glass'] as const;
-const comparisonLabels = {
-  normal: 'Normal regression baseline',
-  fallback: 'CSS fallback',
-  glass: 'Liquid Glass enhancement',
-} as const;
+interface ComparisonMode {
+  id: string;
+  label: string;
+  effect: Effect;
+  fallback: boolean;
+}
+
+interface ComparisonGroup {
+  id: string;
+  label: string;
+  description: string;
+  tabTheme: TabBarTheme;
+  split: boolean;
+  modes: ComparisonMode[];
+}
+
+const comparisonGroups: ComparisonGroup[] = [
+  {
+    id: 'tag',
+    label: 'Classic tag',
+    description: '上游逐项标签布局；Glass 仅叠加材质，并使用半透明逐项选中背景。',
+    tabTheme: 'tag',
+    split: false,
+    modes: [
+      { id: 'tag-normal', label: 'Normal', effect: 'normal', fallback: false },
+      { id: 'tag-fallback', label: 'CSS fallback', effect: 'glass', fallback: true },
+      { id: 'tag-glass', label: 'Liquid Glass', effect: 'glass', fallback: false },
+    ],
+  },
+  {
+    id: 'capsule',
+    label: 'Shared capsule',
+    description: '新增共享选中胶囊布局；选中态在选项之间移动，并支持同步按压反馈。',
+    tabTheme: 'capsule',
+    split: false,
+    modes: [
+      { id: 'capsule-normal', label: 'Normal', effect: 'normal', fallback: false },
+      { id: 'capsule-fallback', label: 'CSS fallback', effect: 'glass', fallback: true },
+      { id: 'capsule-glass', label: 'Liquid Glass', effect: 'glass', fallback: false },
+    ],
+  },
+];
 const landscapeUrl = 'https://tdesign.gtimg.com/demo/demo-image-1.png';
-const effect = ref<Effect>('glass');
 const shape = ref<Shape>('round');
-const background = ref<Background>('grid');
+const background = ref<Background>('text');
 const theme = ref<Theme>('light');
 const previewWidth = ref(390);
-const tabBarHeight = ref(64);
+const tabBarHeight = ref(56);
 const fixed = ref(false);
 const placeholder = ref(false);
 const safeArea = ref(false);
@@ -458,7 +501,7 @@ const specularOpacity = ref(DEFAULT_TAB_BAR_GLASS_TUNING.specularOpacity);
 const specularSaturation = ref(DEFAULT_TAB_BAR_GLASS_TUNING.specularSaturation);
 const lightAngle = ref(DEFAULT_TAB_BAR_GLASS_TUNING.lightAngle);
 const textureDpr = ref(1);
-const backgroundAlpha = ref(0.5);
+const backgroundAlpha = ref(0.6);
 const blur = ref(DEFAULT_TAB_BAR_GLASS_TUNING.blur);
 const backgroundColor = ref('#ffffff');
 const shadowPreset = ref<'floating' | 'compact' | 'none'>('floating');
@@ -566,7 +609,7 @@ const layoutParameters = [
     name: 'TabBar 高度',
     description: '调整材质、圆角和内部项目高度；同时改变 radius、实际 bezel 像素与纹理尺寸。',
     value: tabBarHeight,
-    default: 64,
+    default: 56,
     min: 52,
     max: 88,
     step: 2,
@@ -751,7 +794,7 @@ const opticalParameters = [
     name: '基线不透明度',
     description: '控制玻璃底色的遮盖程度；越高越易读，但背景与折射会越不明显。',
     value: backgroundAlpha,
-    default: 0.5,
+    default: 0.6,
     min: 0.35,
     max: 0.95,
     step: 0.01,
@@ -944,8 +987,8 @@ const resetParameters = () => {
   lightAngle.value = DEFAULT_TAB_BAR_GLASS_TUNING.lightAngle;
   textureDpr.value = 1;
   previewWidth.value = 390;
-  tabBarHeight.value = 64;
-  backgroundAlpha.value = 0.5;
+  tabBarHeight.value = 56;
+  backgroundAlpha.value = 0.6;
   backgroundColor.value = theme.value === 'dark' ? '#000000' : '#ffffff';
   shadowPreset.value = 'floating';
   selectedBackgroundHue.value = 216;
@@ -1124,8 +1167,61 @@ onBeforeUnmount(() => {
 .glass-demo__comparison {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 24px;
   padding-bottom: 4px;
+}
+
+.glass-demo__comparison-group,
+.glass-demo__group-previews {
+  display: flex;
+  flex-direction: column;
+}
+
+.glass-demo__comparison-group {
+  gap: 12px;
+}
+
+.glass-demo__comparison-group + .glass-demo__comparison-group {
+  padding-top: 20px;
+  border-top: 1px solid var(--td-component-stroke, #e7e9ee);
+}
+
+.glass-demo__group-previews {
+  gap: 16px;
+}
+
+.glass-demo__group-header {
+  display: grid;
+  gap: 8px;
+}
+
+.glass-demo__group-header > div {
+  display: grid;
+  gap: 3px;
+}
+
+.glass-demo__group-header > div > strong {
+  font-size: 15px;
+}
+
+.glass-demo__group-header > div > span {
+  color: var(--td-text-color-secondary, #667085);
+  font-size: 11px;
+  line-height: 1.45;
+}
+
+.glass-demo__group-header p {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 10px;
+  margin: 0;
+  color: var(--td-text-color-placeholder, #8b95a5);
+  font-size: 10px;
+  line-height: 1.4;
+}
+
+.glass-demo__group-header code {
+  font: inherit;
 }
 
 .glass-demo__preview {
@@ -1250,24 +1346,24 @@ onBeforeUnmount(() => {
   min-height: var(--demo-tab-bar-frame-height);
 }
 
-.glass-demo__bar-frame :deep(.t-tab-bar) {
+.glass-demo__bar-frame :deep(.t-tab-bar--theme-capsule) {
   min-height: var(--demo-tab-bar-height);
 }
 
-.glass-demo__bar-frame :deep(.t-tab-bar-item) {
+.glass-demo__bar-frame :deep(.t-tab-bar--theme-capsule .t-tab-bar-item) {
   height: var(--demo-tab-bar-item-height);
 }
 
-.glass-demo__bar-frame :deep(.t-tab-bar--glass.t-tab-bar--round) {
+.glass-demo__bar-frame :deep(.t-tab-bar--glass.t-tab-bar--round.t-tab-bar--theme-capsule) {
   min-height: var(--demo-tab-bar-height);
   border-radius: var(--demo-tab-bar-radius);
 }
 
-.glass-demo__bar-frame :deep(.t-tab-bar--glass.t-tab-bar--round .t-tab-bar-item) {
+.glass-demo__bar-frame :deep(.t-tab-bar--glass.t-tab-bar--round.t-tab-bar--theme-capsule .t-tab-bar-item) {
   height: var(--demo-tab-bar-item-height);
 }
 
-.glass-demo__bar-frame :deep(.t-tab-bar--round .t-tab-bar-item__content) {
+.glass-demo__bar-frame :deep(.t-tab-bar--round.t-tab-bar--theme-capsule .t-tab-bar-item__content) {
   border-radius: var(--demo-tab-bar-item-radius);
 }
 
@@ -1484,7 +1580,7 @@ onBeforeUnmount(() => {
   overflow: visible;
 }
 
-.glass-demo__layout.is-stacked .glass-demo__comparison {
+.glass-demo__layout.is-stacked .glass-demo__group-previews {
   flex-direction: row;
   overflow-x: auto;
   padding-bottom: 8px;

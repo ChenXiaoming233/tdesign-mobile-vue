@@ -47,6 +47,9 @@ describe('TabBar Liquid Glass layer inspector demo', () => {
       step: '0.1',
     });
     expect(wrapper.get('[data-testid="inspector-meta-light-angle"]').text()).toBe('default 270 · 0–360');
+    expect(wrapper.get('[data-testid="inspector-meta-baseline-opacity"]').text()).toBe('default 0.6 · 0.2–0.9');
+    expect(wrapper.get('.glass-inspector').attributes('style')).toContain('--td-tab-bar-color: #1f2329');
+    expect(wrapper.get('.glass-inspector').attributes('style')).toContain('--td-tab-bar-active-color: #0052d9');
   });
 
   it('updates the real fallback variable and derived blur metrics', async () => {
@@ -86,16 +89,19 @@ describe('TabBar Liquid Glass layer inspector demo', () => {
     const angle = wrapper.get('[data-testid="inspector-parameter-light-angle"]');
     const width = wrapper.get('[data-testid="inspector-parameter-preview-width"]');
     const fallbackBlur = wrapper.get('[data-testid="inspector-parameter-fallback-blur"]');
+    const baselineOpacity = wrapper.get('[data-testid="inspector-parameter-baseline-opacity"]');
 
     await scale.setValue(2);
     await angle.setValue(45);
     await width.setValue(620);
     await fallbackBlur.setValue(4);
+    await baselineOpacity.setValue(0.3);
     await wrapper.get('[data-testid="inspector-reset-parameters"]').trigger('click');
 
     expect((scale.element as HTMLInputElement).value).toBe('1');
     expect((angle.element as HTMLInputElement).value).toBe('270');
     expect((width.element as HTMLInputElement).value).toBe('390');
     expect((fallbackBlur.element as HTMLInputElement).value).toBe('8');
+    expect((baselineOpacity.element as HTMLInputElement).value).toBe('0.6');
   });
 });
