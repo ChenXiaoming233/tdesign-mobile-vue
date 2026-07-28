@@ -39,6 +39,7 @@ export default defineComponent({
         [`${tabBarClass.value}--fixed`]: props.fixed,
         [`${tabBarClass.value}--glass`]: props.effect === 'glass',
         [`${tabBarClass.value}--safe`]: props.safeAreaInsetBottom,
+        [`${tabBarClass.value}--theme-capsule`]: props.theme === 'capsule',
       },
       `${tabBarClass.value}--${props.shape}`,
     ]);
@@ -88,7 +89,7 @@ export default defineComponent({
     };
 
     const renderSelectionIndicator = (items: VNode[]) => {
-      if (props.effect !== 'glass' || props.shape !== 'round' || !items.length) return null;
+      if (props.theme !== 'capsule' || props.shape !== 'round' || !items.length) return null;
 
       const isPressed = typeof pressedValue.value !== 'undefined';
       const activeSelection = Array.isArray(activeValue.value) ? activeValue.value[0] : activeValue.value;
@@ -203,11 +204,17 @@ export default defineComponent({
       const vNodes = context.slots.default ? context.slots.default() : [];
       const items = updateItemCount(vNodes);
 
+      const selectionIndicator = renderSelectionIndicator(items);
       const renderTabBar =
         props.effect === 'glass' ? (
           <div ref={root} role="tablist" class={rootClass.value} style={styles.value}>
             {renderGlassLayers()}
-            {renderSelectionIndicator(items)}
+            {selectionIndicator}
+            {renderTNodeJSX('default')}
+          </div>
+        ) : selectionIndicator ? (
+          <div ref={root} role="tablist" class={rootClass.value} style={styles.value}>
+            {selectionIndicator}
             {renderTNodeJSX('default')}
           </div>
         ) : (

@@ -13,7 +13,7 @@ placeholder | Boolean | false | `1.12.0` | N
 safeAreaInsetBottom | Boolean | true | \- | N
 shape | String | normal | options: normal/round | N
 split | Boolean | true | \- | N
-theme | String | normal | options: normal/tag | N
+theme | String | normal | Option style. normal uses a weak active state, tag uses an item tag, and capsule uses a shared capsule indicator. options: normal/tag/capsule | N
 value | String / Number / Array | - | `v-model` and `v-model:value` is supported。Typescript: `string \| number \| Array<string \| number>` | N
 defaultValue | String / Number / Array | - | uncontrolled property。Typescript: `string \| number \| Array<string \| number>` | N
 zIndex | Number | 1 | `1.12.0` | N

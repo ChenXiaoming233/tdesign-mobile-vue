@@ -44,10 +44,10 @@ export interface TdTabBarProps {
    */
   split?: boolean;
   /**
-   * 选项风格
+   * 选项风格。normal 为弱选中，tag 为逐项标签选中，capsule 为共享胶囊选中态
    * @default normal
    */
-  theme?: 'normal' | 'tag';
+  theme?: 'normal' | 'tag' | 'capsule';
   /**
    * 当前选中标签的索引
    */

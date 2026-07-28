@@ -48,13 +48,13 @@ export default {
     type: Boolean,
     default: true,
   },
-  /** 选项风格 */
+  /** 选项风格。normal 为弱选中，tag 为逐项标签选中，capsule 为共享胶囊选中态 */
   theme: {
     type: String as PropType<TdTabBarProps['theme']>,
     default: 'normal' as TdTabBarProps['theme'],
     validator(val: TdTabBarProps['theme']): boolean {
       if (!val) return true;
-      return ['normal', 'tag'].includes(val);
+      return ['normal', 'tag', 'capsule'].includes(val);
     },
   },
   /** 当前选中标签的索引 */
