@@ -2,6 +2,9 @@
   <section class="glass-demo" :class="`glass-demo--${theme}`" :style="demoVariables">
     <div ref="layoutElement" class="glass-demo__layout" :class="{ 'is-stacked': stacked }">
       <aside class="glass-demo__stage">
+        <p class="glass-demo__scroll-hint" data-testid="stage-scroll-hint">
+          在左侧栏滚动以查看不同样式
+        </p>
         <div class="glass-demo__comparison" data-testid="comparison">
           <section
             v-for="group in comparisonGroups"
@@ -980,6 +983,14 @@ onBeforeUnmount(() => {
 /* 左侧样式展示栏：宽度以展示框宽度为约束，滚动时保持悬浮 */
 .glass-demo__stage {
   .playground-stage-column(var(--demo-preview-width), var(--demo-stage-max-height));
+}
+
+.glass-demo__scroll-hint {
+  margin: 0 0 10px;
+  color: var(--td-text-color-secondary, #667085);
+  font-size: 12px;
+  line-height: 1.5;
+  text-align: center;
 }
 
 .glass-demo__panel {
