@@ -917,8 +917,176 @@ exports[`TabBar > TabBar glassVue demo works fine 1`] = `
     class="glass-tab-bar-demo__orb glass-tab-bar-demo__orb--right"
     data-v-2cef45b6=""
   />
+  
   <div
-    class="t-tab-bar t-tab-bar--bordered t-tab-bar--glass t-tab-bar--safe t-tab-bar--round"
+    class="t-tab-bar t-tab-bar--bordered t-tab-bar--glass t-tab-bar--safe t-tab-bar--round glass-tab-bar-demo__bar"
+    data-v-2cef45b6=""
+    role="tablist"
+    style="z-index: 1;"
+  >
+    
+    <span
+      aria-hidden="true"
+      class="t-tab-bar__glass-refraction"
+    />
+    <span
+      aria-hidden="true"
+      class="t-tab-bar__glass-base"
+    />
+    <span
+      aria-hidden="true"
+      class="t-tab-bar__glass-sheen"
+    />
+    <!---->
+    
+    <!---->
+    
+    
+    <div
+      class="t-tab-bar-item t-tab-bar-item--round"
+      data-v-2cef45b6=""
+    >
+      <div
+        aria-expanded="false"
+        aria-selected="true"
+        class="t-tab-bar-item__content t-tab-bar-item__content--checked t-tab-bar-item__content--tag"
+        role="tab"
+      >
+        <div
+          class="t-tab-bar-item__icon"
+          style="height: 20px;"
+        >
+          
+          <svg
+            class="t-icon t-icon-home"
+            data-v-2cef45b6=""
+            style="font-size: 20px;"
+          >
+            <use
+              href="#t-icon-home"
+            />
+          </svg>
+          
+        </div>
+        <div
+          class="t-tab-bar-item__text t-tab-bar-item__text--small"
+        >
+          <!---->
+          <!---->
+        </div>
+      </div>
+      <!---->
+    </div>
+    <div
+      class="t-tab-bar-item t-tab-bar-item--round"
+      data-v-2cef45b6=""
+    >
+      <div
+        aria-expanded="false"
+        aria-selected="false"
+        class="t-tab-bar-item__content t-tab-bar-item__content--tag"
+        role="tab"
+      >
+        <div
+          class="t-tab-bar-item__icon"
+          style="height: 20px;"
+        >
+          
+          <svg
+            class="t-icon t-icon-search"
+            data-v-2cef45b6=""
+            style="font-size: 20px;"
+          >
+            <use
+              href="#t-icon-search"
+            />
+          </svg>
+          
+        </div>
+        <div
+          class="t-tab-bar-item__text t-tab-bar-item__text--small"
+        >
+          <!---->
+          <!---->
+        </div>
+      </div>
+      <!---->
+    </div>
+    <div
+      class="t-tab-bar-item t-tab-bar-item--round"
+      data-v-2cef45b6=""
+    >
+      <div
+        aria-expanded="false"
+        aria-selected="false"
+        class="t-tab-bar-item__content t-tab-bar-item__content--tag"
+        role="tab"
+      >
+        <div
+          class="t-tab-bar-item__icon"
+          style="height: 20px;"
+        >
+          
+          <svg
+            class="t-icon t-icon-folder"
+            data-v-2cef45b6=""
+            style="font-size: 20px;"
+          >
+            <use
+              href="#t-icon-folder"
+            />
+          </svg>
+          
+        </div>
+        <div
+          class="t-tab-bar-item__text t-tab-bar-item__text--small"
+        >
+          <!---->
+          <!---->
+        </div>
+      </div>
+      <!---->
+    </div>
+    <div
+      class="t-tab-bar-item t-tab-bar-item--round"
+      data-v-2cef45b6=""
+    >
+      <div
+        aria-expanded="false"
+        aria-selected="false"
+        class="t-tab-bar-item__content t-tab-bar-item__content--tag"
+        role="tab"
+      >
+        <div
+          class="t-tab-bar-item__icon"
+          style="height: 20px;"
+        >
+          
+          <svg
+            class="t-icon t-icon-user"
+            data-v-2cef45b6=""
+            style="font-size: 20px;"
+          >
+            <use
+              href="#t-icon-user"
+            />
+          </svg>
+          
+        </div>
+        <div
+          class="t-tab-bar-item__text t-tab-bar-item__text--small"
+        >
+          <!---->
+          <!---->
+        </div>
+      </div>
+      <!---->
+    </div>
+    
+    
+  </div>
+  <div
+    class="t-tab-bar t-tab-bar--bordered t-tab-bar--glass t-tab-bar--safe t-tab-bar--theme-capsule t-tab-bar--round glass-tab-bar-demo__bar"
     data-v-2cef45b6=""
     role="tablist"
     style="z-index: 1;"
@@ -956,7 +1124,7 @@ exports[`TabBar > TabBar glassVue demo works fine 1`] = `
       <div
         aria-expanded="false"
         aria-selected="true"
-        class="t-tab-bar-item__content t-tab-bar-item__content--checked t-tab-bar-item__content--tag"
+        class="t-tab-bar-item__content t-tab-bar-item__content--checked t-tab-bar-item__content--capsule"
         role="tab"
       >
         <div
@@ -980,7 +1148,9 @@ exports[`TabBar > TabBar glassVue demo works fine 1`] = `
         >
           <!---->
           
-          首页 
+          
+          首页
+          
           
         </div>
       </div>
@@ -993,7 +1163,7 @@ exports[`TabBar > TabBar glassVue demo works fine 1`] = `
       <div
         aria-expanded="false"
         aria-selected="false"
-        class="t-tab-bar-item__content t-tab-bar-item__content--tag"
+        class="t-tab-bar-item__content t-tab-bar-item__content--capsule"
         role="tab"
       >
         <div
@@ -1017,7 +1187,9 @@ exports[`TabBar > TabBar glassVue demo works fine 1`] = `
         >
           <!---->
           
-          发现 
+          
+          发现
+          
           
         </div>
       </div>
@@ -1030,7 +1202,7 @@ exports[`TabBar > TabBar glassVue demo works fine 1`] = `
       <div
         aria-expanded="false"
         aria-selected="false"
-        class="t-tab-bar-item__content t-tab-bar-item__content--tag"
+        class="t-tab-bar-item__content t-tab-bar-item__content--capsule"
         role="tab"
       >
         <div
@@ -1054,7 +1226,9 @@ exports[`TabBar > TabBar glassVue demo works fine 1`] = `
         >
           <!---->
           
-          收藏 
+          
+          收藏
+          
           
         </div>
       </div>
@@ -1067,7 +1241,7 @@ exports[`TabBar > TabBar glassVue demo works fine 1`] = `
       <div
         aria-expanded="false"
         aria-selected="false"
-        class="t-tab-bar-item__content t-tab-bar-item__content--tag"
+        class="t-tab-bar-item__content t-tab-bar-item__content--capsule"
         role="tab"
       >
         <div
@@ -1091,7 +1265,9 @@ exports[`TabBar > TabBar glassVue demo works fine 1`] = `
         >
           <!---->
           
-          我的 
+          
+          我的
+          
           
         </div>
       </div>
@@ -1100,6 +1276,7 @@ exports[`TabBar > TabBar glassVue demo works fine 1`] = `
     
     
   </div>
+  
 </div>
 `;
 
@@ -2504,8 +2681,176 @@ exports[`TabBar > TabBar mobileVue demo works fine 1`] = `
           class="glass-tab-bar-demo__orb glass-tab-bar-demo__orb--right"
           data-v-2cef45b6=""
         />
+        
         <div
-          class="t-tab-bar t-tab-bar--bordered t-tab-bar--glass t-tab-bar--safe t-tab-bar--round"
+          class="t-tab-bar t-tab-bar--bordered t-tab-bar--glass t-tab-bar--safe t-tab-bar--round glass-tab-bar-demo__bar"
+          data-v-2cef45b6=""
+          role="tablist"
+          style="z-index: 1;"
+        >
+          
+          <span
+            aria-hidden="true"
+            class="t-tab-bar__glass-refraction"
+          />
+          <span
+            aria-hidden="true"
+            class="t-tab-bar__glass-base"
+          />
+          <span
+            aria-hidden="true"
+            class="t-tab-bar__glass-sheen"
+          />
+          <!---->
+          
+          <!---->
+          
+          
+          <div
+            class="t-tab-bar-item t-tab-bar-item--round"
+            data-v-2cef45b6=""
+          >
+            <div
+              aria-expanded="false"
+              aria-selected="true"
+              class="t-tab-bar-item__content t-tab-bar-item__content--checked t-tab-bar-item__content--tag"
+              role="tab"
+            >
+              <div
+                class="t-tab-bar-item__icon"
+                style="height: 20px;"
+              >
+                
+                <svg
+                  class="t-icon t-icon-home"
+                  data-v-2cef45b6=""
+                  style="font-size: 20px;"
+                >
+                  <use
+                    href="#t-icon-home"
+                  />
+                </svg>
+                
+              </div>
+              <div
+                class="t-tab-bar-item__text t-tab-bar-item__text--small"
+              >
+                <!---->
+                <!---->
+              </div>
+            </div>
+            <!---->
+          </div>
+          <div
+            class="t-tab-bar-item t-tab-bar-item--round"
+            data-v-2cef45b6=""
+          >
+            <div
+              aria-expanded="false"
+              aria-selected="false"
+              class="t-tab-bar-item__content t-tab-bar-item__content--tag"
+              role="tab"
+            >
+              <div
+                class="t-tab-bar-item__icon"
+                style="height: 20px;"
+              >
+                
+                <svg
+                  class="t-icon t-icon-search"
+                  data-v-2cef45b6=""
+                  style="font-size: 20px;"
+                >
+                  <use
+                    href="#t-icon-search"
+                  />
+                </svg>
+                
+              </div>
+              <div
+                class="t-tab-bar-item__text t-tab-bar-item__text--small"
+              >
+                <!---->
+                <!---->
+              </div>
+            </div>
+            <!---->
+          </div>
+          <div
+            class="t-tab-bar-item t-tab-bar-item--round"
+            data-v-2cef45b6=""
+          >
+            <div
+              aria-expanded="false"
+              aria-selected="false"
+              class="t-tab-bar-item__content t-tab-bar-item__content--tag"
+              role="tab"
+            >
+              <div
+                class="t-tab-bar-item__icon"
+                style="height: 20px;"
+              >
+                
+                <svg
+                  class="t-icon t-icon-folder"
+                  data-v-2cef45b6=""
+                  style="font-size: 20px;"
+                >
+                  <use
+                    href="#t-icon-folder"
+                  />
+                </svg>
+                
+              </div>
+              <div
+                class="t-tab-bar-item__text t-tab-bar-item__text--small"
+              >
+                <!---->
+                <!---->
+              </div>
+            </div>
+            <!---->
+          </div>
+          <div
+            class="t-tab-bar-item t-tab-bar-item--round"
+            data-v-2cef45b6=""
+          >
+            <div
+              aria-expanded="false"
+              aria-selected="false"
+              class="t-tab-bar-item__content t-tab-bar-item__content--tag"
+              role="tab"
+            >
+              <div
+                class="t-tab-bar-item__icon"
+                style="height: 20px;"
+              >
+                
+                <svg
+                  class="t-icon t-icon-user"
+                  data-v-2cef45b6=""
+                  style="font-size: 20px;"
+                >
+                  <use
+                    href="#t-icon-user"
+                  />
+                </svg>
+                
+              </div>
+              <div
+                class="t-tab-bar-item__text t-tab-bar-item__text--small"
+              >
+                <!---->
+                <!---->
+              </div>
+            </div>
+            <!---->
+          </div>
+          
+          
+        </div>
+        <div
+          class="t-tab-bar t-tab-bar--bordered t-tab-bar--glass t-tab-bar--safe t-tab-bar--theme-capsule t-tab-bar--round glass-tab-bar-demo__bar"
           data-v-2cef45b6=""
           role="tablist"
           style="z-index: 1;"
@@ -2543,7 +2888,7 @@ exports[`TabBar > TabBar mobileVue demo works fine 1`] = `
             <div
               aria-expanded="false"
               aria-selected="true"
-              class="t-tab-bar-item__content t-tab-bar-item__content--checked t-tab-bar-item__content--tag"
+              class="t-tab-bar-item__content t-tab-bar-item__content--checked t-tab-bar-item__content--capsule"
               role="tab"
             >
               <div
@@ -2567,7 +2912,9 @@ exports[`TabBar > TabBar mobileVue demo works fine 1`] = `
               >
                 <!---->
                 
-                首页 
+                
+                首页
+                
                 
               </div>
             </div>
@@ -2580,7 +2927,7 @@ exports[`TabBar > TabBar mobileVue demo works fine 1`] = `
             <div
               aria-expanded="false"
               aria-selected="false"
-              class="t-tab-bar-item__content t-tab-bar-item__content--tag"
+              class="t-tab-bar-item__content t-tab-bar-item__content--capsule"
               role="tab"
             >
               <div
@@ -2604,7 +2951,9 @@ exports[`TabBar > TabBar mobileVue demo works fine 1`] = `
               >
                 <!---->
                 
-                发现 
+                
+                发现
+                
                 
               </div>
             </div>
@@ -2617,7 +2966,7 @@ exports[`TabBar > TabBar mobileVue demo works fine 1`] = `
             <div
               aria-expanded="false"
               aria-selected="false"
-              class="t-tab-bar-item__content t-tab-bar-item__content--tag"
+              class="t-tab-bar-item__content t-tab-bar-item__content--capsule"
               role="tab"
             >
               <div
@@ -2641,7 +2990,9 @@ exports[`TabBar > TabBar mobileVue demo works fine 1`] = `
               >
                 <!---->
                 
-                收藏 
+                
+                收藏
+                
                 
               </div>
             </div>
@@ -2654,7 +3005,7 @@ exports[`TabBar > TabBar mobileVue demo works fine 1`] = `
             <div
               aria-expanded="false"
               aria-selected="false"
-              class="t-tab-bar-item__content t-tab-bar-item__content--tag"
+              class="t-tab-bar-item__content t-tab-bar-item__content--capsule"
               role="tab"
             >
               <div
@@ -2678,7 +3029,9 @@ exports[`TabBar > TabBar mobileVue demo works fine 1`] = `
               >
                 <!---->
                 
-                我的 
+                
+                我的
+                
                 
               </div>
             </div>
@@ -2687,6 +3040,7 @@ exports[`TabBar > TabBar mobileVue demo works fine 1`] = `
           
           
         </div>
+        
       </div>
       
     </div>

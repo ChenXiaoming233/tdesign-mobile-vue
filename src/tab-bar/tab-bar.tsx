@@ -204,23 +204,30 @@ export default defineComponent({
       const items = updateItemCount(vNodes);
 
       const selectionIndicator = renderSelectionIndicator(items);
-      const renderTabBar =
-        props.effect === 'glass' ? (
+      let renderTabBar;
+
+      if (props.effect === 'glass') {
+        renderTabBar = (
           <div ref={root} role="tablist" class={rootClass.value} style={styles.value}>
             {renderGlassLayers()}
             {selectionIndicator}
             {renderTNodeJSX('default')}
           </div>
-        ) : selectionIndicator ? (
+        );
+      } else if (selectionIndicator) {
+        renderTabBar = (
           <div ref={root} role="tablist" class={rootClass.value} style={styles.value}>
             {selectionIndicator}
             {renderTNodeJSX('default')}
           </div>
-        ) : (
+        );
+      } else {
+        renderTabBar = (
           <div ref={root} role="tablist" class={rootClass.value} style={styles.value}>
             {renderTNodeJSX('default')}
           </div>
         );
+      }
 
       if (props.fixed && props.placeholder) {
         return (

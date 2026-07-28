@@ -68,7 +68,7 @@ export interface TdTabBarProps {
   /**
    * 选中标签切换时触发
    */
-  onChange?: (context: { value: string | number }) => void;
+  onChange?: (value: string | number) => void;
 }
 
 export interface TdTabBarItemProps {

@@ -17,17 +17,8 @@ export default defineComponent({
     const tabBarItemClass = usePrefixClass('tab-bar-item');
 
     const { t, globalConfig } = useConfig('tabBar');
-    const {
-      split,
-      shape,
-      theme,
-      defaultIndex,
-      activeValue,
-      itemCount,
-      pressedValue,
-      updateChild,
-      updatePressed,
-    } = inject<any>('tab-bar');
+    const { split, shape, theme, defaultIndex, activeValue, itemCount, pressedValue, updateChild, updatePressed } =
+      inject<any>('tab-bar');
     const currentName = initName(defaultIndex);
 
     const textNode = ref<HTMLElement>();

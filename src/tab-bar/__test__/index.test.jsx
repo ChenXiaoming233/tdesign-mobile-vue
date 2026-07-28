@@ -66,7 +66,7 @@ describe('TabBar', () => {
       const value = ref('1');
       const wrapper = mount({
         render: () => (
-          <TabBar v-model={value.value} effect="glass" shape="round" fixed={false}>
+          <TabBar v-model={value.value} effect="glass" shape="round" theme="capsule" fixed={false}>
             {list.map((item) => (
               <TabBarItem {...item}>{item.text}</TabBarItem>
             ))}
@@ -91,7 +91,7 @@ describe('TabBar', () => {
       }));
       const wrapper = mount({
         render: () => (
-          <TabBar v-model={value.value} effect="glass" shape="round" fixed={false}>
+          <TabBar v-model={value.value} effect="glass" shape="round" theme="capsule" fixed={false}>
             {items.map((item) => (
               <TabBarItem {...item}>{item.value}</TabBarItem>
             ))}
@@ -109,7 +109,7 @@ describe('TabBar', () => {
       const value = ref('1');
       const wrapper = mount({
         render: () => (
-          <TabBar v-model={value.value} effect="glass" shape="round" fixed={false}>
+          <TabBar v-model={value.value} effect="glass" shape="round" theme="capsule" fixed={false}>
             {list.map((item) => (
               <TabBarItem {...item}>{item.text}</TabBarItem>
             ))}
@@ -136,10 +136,14 @@ describe('TabBar', () => {
       expect(indicator.element.style.transform).toBe('translate3d(0%, 0, 0)');
     });
 
-    it('does not render the shared capsule outside glass round mode', () => {
+    it.each([
+      ['glass normal capsule', { effect: 'glass', shape: 'normal', theme: 'capsule' }],
+      ['glass round tag', { effect: 'glass', shape: 'round', theme: 'tag' }],
+      ['normal round tag', { effect: 'normal', shape: 'round', theme: 'tag' }],
+    ])('does not render the shared capsule in %s mode', (_, tabBarProps) => {
       const wrapper = mount({
         render: () => (
-          <TabBar value="1" effect="glass" shape="normal" fixed={false}>
+          <TabBar value="1" fixed={false} {...tabBarProps}>
             {list.map((item) => (
               <TabBarItem {...item}>{item.text}</TabBarItem>
             ))}
@@ -148,6 +152,20 @@ describe('TabBar', () => {
       });
 
       expect(wrapper.find('.t-tab-bar__selection-track').exists()).toBe(false);
+    });
+
+    it('renders the shared capsule in normal round capsule mode', () => {
+      const wrapper = mount({
+        render: () => (
+          <TabBar value="1" effect="normal" shape="round" theme="capsule" fixed={false}>
+            {list.map((item) => (
+              <TabBarItem {...item}>{item.text}</TabBarItem>
+            ))}
+          </TabBar>
+        ),
+      });
+
+      expect(wrapper.findAll('.t-tab-bar__selection-indicator')).toHaveLength(1);
     });
 
     it('bordered', async () => {
