@@ -215,26 +215,8 @@
             </button>
           </header>
 
-          <div class="glass-demo__metrics" aria-live="polite">
-            <div>
-              <span>Texture / 纹理尺寸</span><strong data-testid="metric-texture">{{ textureLabel }}</strong>
-            </div>
-            <div>
-              <span>Pixels / 像素数</span><strong data-testid="metric-pixels">{{ texturePixels }}</strong>
-            </div>
-            <div>
-              <span>Bezel / 实际覆盖</span><strong data-testid="metric-bezel">{{ bezelWidth.toFixed(1) }} px</strong>
-            </div>
-            <div>
-              <span>Generate / 生成耗时</span
-              ><strong data-testid="metric-generation">{{ generationDuration.toFixed(2) }} ms</strong>
-            </div>
-            <div>
-              <span>Total / 总耗时</span><strong data-testid="metric-total">{{ totalDuration.toFixed(2) }} ms</strong>
-            </div>
-            <div>
-              <span>Rebuilds / 重建次数</span><strong data-testid="metric-rebuilds">{{ rebuildCount }}</strong>
-            </div>
+          <div class="glass-demo__metrics">
+            <PlaygroundMetrics :items="metrics" />
           </div>
 
           <h4 class="glass-demo__section-title">Optical calibration / 光学校准</h4>
@@ -416,10 +398,13 @@
 </template>
 
 <script setup lang="ts">
-import { CSSProperties, computed, onBeforeUnmount, onMounted, provide, ref, watch } from 'vue';
+import { CSSProperties, computed, onBeforeUnmount, provide, ref, watch } from 'vue';
 import { Icon as TIcon } from 'tdesign-icons-vue-next';
 import { DEFAULT_TAB_BAR_GLASS_TUNING } from '../liquid-glass-map';
 import { TabBarGlassBuildStats, TabBarGlassRuntimeTuning, tabBarGlassDevContextKey } from '../useTabBarGlassFilter';
+import PlaygroundMetrics from './_liquid-glass/PlaygroundMetrics.vue';
+import { useBackgroundDrag } from './_liquid-glass/use-background-drag';
+import { usePlaygroundLayout } from './_liquid-glass/use-playground-layout';
 
 type Effect = 'normal' | 'glass';
 type Shape = 'normal' | 'round';
@@ -485,10 +470,16 @@ const safeArea = ref(false);
 const bordered = ref(true);
 const multiple = ref(false);
 const backgroundMoves = ref(false);
-const backgroundDragging = ref(false);
 const backgroundScale = ref(1);
-const backgroundOffsetX = ref(0);
-const backgroundOffsetY = ref(0);
+const {
+  backgroundDragging,
+  backgroundOffsetX,
+  backgroundOffsetY,
+  startBackgroundDrag,
+  moveBackground,
+  stopBackgroundDrag,
+  resetBackgroundPosition,
+} = useBackgroundDrag();
 const selected = ref('home');
 const secondarySelected = ref('listen');
 
@@ -517,6 +508,14 @@ const totalDuration = ref(0);
 const rebuildCount = ref(0);
 const textureLabel = computed(() => `${textureWidth.value} x ${textureHeight.value}`);
 const texturePixels = computed(() => textureWidth.value * textureHeight.value);
+const metrics = computed(() => [
+  { label: 'Texture / 纹理尺寸', value: textureLabel.value, testId: 'metric-texture' },
+  { label: 'Pixels / 像素数', value: texturePixels.value, testId: 'metric-pixels' },
+  { label: 'Bezel / 实际覆盖', value: `${bezelWidth.value.toFixed(1)} px`, testId: 'metric-bezel' },
+  { label: 'Generate / 生成耗时', value: `${generationDuration.value.toFixed(2)} ms`, testId: 'metric-generation' },
+  { label: 'Total / 总耗时', value: `${totalDuration.value.toFixed(2)} ms`, testId: 'metric-total' },
+  { label: 'Rebuilds / 重建次数', value: rebuildCount.value, testId: 'metric-rebuilds' },
+]);
 
 const items = [
   { value: 'home', label: 'Home', icon: 'home' },
@@ -864,37 +863,6 @@ const toRgba = (hex: string, alpha: number) => {
   return `rgba(${value >> 16}, ${(value >> 8) & 255}, ${value & 255}, ${alpha})`;
 };
 
-const clampBackgroundOffset = (value: number) => Math.min(Math.max(value, -160), 160);
-let backgroundDrag: { pointerId: number; startX: number; startY: number; offsetX: number; offsetY: number } | undefined;
-
-const startBackgroundDrag = (event: PointerEvent) => {
-  if (event.target instanceof Element && event.target.closest('.t-tab-bar')) return;
-  const target = event.currentTarget as HTMLElement;
-  target.setPointerCapture(event.pointerId);
-  backgroundDragging.value = true;
-  backgroundDrag = {
-    pointerId: event.pointerId,
-    startX: event.clientX,
-    startY: event.clientY,
-    offsetX: backgroundOffsetX.value,
-    offsetY: backgroundOffsetY.value,
-  };
-};
-
-const moveBackground = (event: PointerEvent) => {
-  if (!backgroundDrag || backgroundDrag.pointerId !== event.pointerId) return;
-  backgroundOffsetX.value = clampBackgroundOffset(backgroundDrag.offsetX + event.clientX - backgroundDrag.startX);
-  backgroundOffsetY.value = clampBackgroundOffset(backgroundDrag.offsetY + event.clientY - backgroundDrag.startY);
-};
-
-const stopBackgroundDrag = (event: PointerEvent) => {
-  if (!backgroundDrag || backgroundDrag.pointerId !== event.pointerId) return;
-  const target = event.currentTarget as HTMLElement;
-  if (target.hasPointerCapture(event.pointerId)) target.releasePointerCapture(event.pointerId);
-  backgroundDragging.value = false;
-  backgroundDrag = undefined;
-};
-
 const tuning = computed<TabBarGlassRuntimeTuning>(() => ({
   surface: surface.value,
   thicknessRatio: thicknessRatio.value,
@@ -929,31 +897,7 @@ const backgroundPlaneStyle = computed<CSSProperties>(() => ({
   '--demo-background-y': `${backgroundOffsetY.value}px`,
 }));
 
-/* 左侧展示栏宽度由展示框宽度约束；右侧参数区低于最小可用宽度时改为上下堆叠 */
-const PANEL_MIN_WIDTH = 420;
-const LAYOUT_GAP = 20;
-const layoutElement = ref<HTMLElement>();
-const stacked = ref(false);
-
-const updateLayoutMode = () => {
-  const element = layoutElement.value;
-  if (!element) return;
-  stacked.value = element.clientWidth - previewWidth.value - LAYOUT_GAP < PANEL_MIN_WIDTH;
-};
-
-let layoutObserver: ResizeObserver | undefined;
-onMounted(() => {
-  updateLayoutMode();
-  window.addEventListener('resize', updateLayoutMode);
-  if (!layoutElement.value || typeof ResizeObserver === 'undefined') return;
-  layoutObserver = new ResizeObserver(updateLayoutMode);
-  layoutObserver.observe(layoutElement.value);
-});
-onBeforeUnmount(() => {
-  window.removeEventListener('resize', updateLayoutMode);
-  layoutObserver?.disconnect();
-});
-watch(previewWidth, updateLayoutMode);
+const { layoutElement, stacked } = usePlaygroundLayout(previewWidth);
 
 const demoVariables = computed<CSSProperties>(() => ({
   '--demo-preview-width': `${previewWidth.value}px`,
@@ -995,8 +939,7 @@ const resetParameters = () => {
   selectedBackgroundOpacity.value = 0.16;
   fallbackBlur.value = 8;
   backgroundScale.value = 1;
-  backgroundOffsetX.value = 0;
-  backgroundOffsetY.value = 0;
+  resetBackgroundPosition();
 };
 
 const previousTheme = typeof document === 'undefined' ? null : document.documentElement.getAttribute('theme-mode');
@@ -1013,6 +956,8 @@ onBeforeUnmount(() => {
 </script>
 
 <style scoped lang="less">
+@import './_liquid-glass/playground-shell.less';
+
 .glass-demo {
   /* 站点顶栏高度，用于限制悬浮展示栏的可视高度 */
   --demo-stage-max-height: calc(100vh - 50px);
@@ -1029,40 +974,22 @@ onBeforeUnmount(() => {
 }
 
 .glass-demo__layout {
-  display: flex;
-  align-items: flex-start;
-  gap: 20px;
+  .playground-layout();
 }
 
 /* 左侧样式展示栏：宽度以展示框宽度为约束，滚动时保持悬浮 */
 .glass-demo__stage {
-  position: sticky;
-  top: 0;
-  z-index: 2;
-  flex: 0 0 var(--demo-preview-width);
-  align-self: flex-start;
-  width: var(--demo-preview-width);
-  max-width: 100%;
-  max-height: var(--demo-stage-max-height);
-  overflow: hidden auto;
-  overscroll-behavior: contain;
+  .playground-stage-column(var(--demo-preview-width), var(--demo-stage-max-height));
 }
 
 .glass-demo__panel {
-  display: flex;
-  flex: 1 1 0;
-  flex-direction: column;
-  gap: 20px;
-  min-width: 0;
+  .playground-panel();
 }
 
 .glass-demo__toolbar,
 .glass-demo__calibration,
 .glass-demo__presets {
-  padding: 16px;
-  background: var(--td-bg-color-container, #fff);
-  border: 1px solid var(--td-component-border, #dcdfe6);
-  border-radius: 8px;
+  .playground-card();
 }
 
 .glass-demo__modes {
@@ -1081,7 +1008,7 @@ onBeforeUnmount(() => {
 }
 
 .glass-demo__control-copy {
-  display: block !important;
+  display: block;
   min-height: 58px;
 }
 
@@ -1106,31 +1033,14 @@ onBeforeUnmount(() => {
 }
 
 .glass-demo__segments {
-  display: flex;
-  min-height: 32px;
-  overflow: hidden;
-  border: 1px solid var(--td-component-border, #cfd3dc);
-  border-radius: 6px;
+  .playground-segments();
 }
 
 .glass-demo__segments button {
-  flex: 1;
+  .playground-segment-button();
+
   min-width: 42px;
   padding: 0 9px;
-  color: inherit;
-  background: transparent;
-  border: 0;
-  border-right: 1px solid var(--td-component-border, #cfd3dc);
-  cursor: pointer;
-}
-
-.glass-demo__segments button:last-child {
-  border-right: 0;
-}
-
-.glass-demo__segments button.is-active {
-  color: #fff;
-  background: var(--td-brand-color, #0052d9);
 }
 
 .glass-demo__toggles {
@@ -1409,35 +1319,7 @@ onBeforeUnmount(() => {
 }
 
 .glass-demo__metrics {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(90px, 1fr));
-  gap: 10px;
   margin: 16px 0;
-}
-
-.glass-demo__metrics div {
-  padding: 10px;
-  background: var(--td-bg-color-secondarycontainer, #f3f5f7);
-  border-radius: 6px;
-}
-
-.glass-demo__metrics span,
-.glass-demo__metrics strong {
-  display: block;
-}
-
-.glass-demo__metrics span {
-  color: var(--td-text-color-secondary, #667085);
-  font-size: 11px;
-}
-
-.glass-demo__metrics strong {
-  margin-top: 4px;
-  font:
-    600 13px/1.2 ui-monospace,
-    SFMono-Regular,
-    Menlo,
-    monospace;
 }
 
 .glass-demo__sliders {
@@ -1595,10 +1477,6 @@ onBeforeUnmount(() => {
   .glass-demo__sliders,
   .glass-demo__presets > div {
     grid-template-columns: 1fr;
-  }
-
-  .glass-demo__metrics {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 </style>

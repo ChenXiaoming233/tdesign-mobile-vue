@@ -1,0 +1,59 @@
+.playground-layout() {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+}
+
+.playground-stage-column(@preview-width, @max-height) {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  flex: 0 0 @preview-width;
+  align-self: flex-start;
+  width: @preview-width;
+  max-width: 100%;
+  max-height: @max-height;
+  overflow: hidden auto;
+  overscroll-behavior: contain;
+}
+
+.playground-panel() {
+  display: flex;
+  flex: 1 1 0;
+  flex-direction: column;
+  gap: 20px;
+  min-width: 0;
+}
+
+.playground-card() {
+  padding: 16px;
+  background: var(--td-bg-color-container, #fff);
+  border: 1px solid var(--td-component-border, #dcdfe6);
+  border-radius: 8px;
+}
+
+.playground-segments() {
+  display: flex;
+  min-height: 32px;
+  overflow: hidden;
+  border: 1px solid var(--td-component-border, #cfd3dc);
+  border-radius: 6px;
+
+  button:last-child {
+    border-right: 0;
+  }
+
+  button.is-active {
+    color: #fff;
+    background: var(--td-brand-color, #0052d9);
+  }
+}
+
+.playground-segment-button() {
+  flex: 1;
+  color: inherit;
+  background: transparent;
+  border: 0;
+  border-right: 1px solid var(--td-component-border, #cfd3dc);
+  cursor: pointer;
+}
